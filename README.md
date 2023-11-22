@@ -4,7 +4,7 @@
 ## 소개 및 시연 영상
 [![Video Label](http://img.youtube.com/vi/jYyTf2IaZ80/0.jpg)](https://youtu.be/jYyTf2IaZ80)
 
-https://youtu.be/wPRVfF-MfNU?si=JUlIHYIE49KLAD-T
+https://youtu.be/jYyTf2IaZ80?si=cC8iMLbVjlFIKKg0
 ## 개요
 전략을 세워 추위와 배고픔 등 생존 요건을 갖춰가며 구조대가 올 때까지 버티세요!
  - 워크래프트 유즈맵인 겨울나기에서 영감을 받고, 언레일드의 상호작용 방식과 로그라이크를 접목하여 새롭고 차별화된 생존게임을 경험할 수 있습니다. 간편한 조작과 난이도 조절을 통해 누구나 즐길 수 있으며 나만의 전략을 세워 게임 플레이를 다채롭게 이어갈 수 있습니다.
