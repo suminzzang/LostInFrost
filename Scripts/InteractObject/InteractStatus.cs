@@ -93,7 +93,7 @@ public class InteractStatus : MonoBehaviourPunCallbacks
         }
         while (true)
         {
-            // 10초 뒤 시체 사라짐
+            // 3초 뒤 시체 사라짐
             yield return new WaitForSeconds(3);
             if (pv.IsMine)
             {

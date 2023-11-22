@@ -43,22 +43,28 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         InitializeIngredientPools();
     }
 
+    // 오브젝트 풀링 초기화 함수
     private void InitializeIngredientPools()
     {
+        // 인벤토리 parent의 자식 오브젝트들을 순회하면서
         foreach (Transform child in inventoryParent)
         {
+            // gameobject를 선언하고
             GameObject ingredient = child.gameObject;
             string ingredientName = ingredient.name.Split('(')[0].Trim(); // "wood", "bone", "branch" 등으로 이름 설정
 
+            // Dictionary에 key가 없다면
             if (!inventoryPools.ContainsKey(ingredientName))
             {
+                // key를 넣어준다.
                 inventoryPools[ingredientName] = new Queue<GameObject>();
             }
-
             ingredient.SetActive(false); // 처음에는 비활성화 상태로 설정
+            // queue에 오브젝트들을 넣어둔다.
             inventoryPools[ingredientName].Enqueue(ingredient);
         }
 
+        // 위와 동일
         foreach (Transform child in buildingParent)
         {
             GameObject building = child.gameObject;
@@ -79,7 +85,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         string ingredientName = ingredient.ingredient.itemName;
         int ingredientCount = ingredient.count;
 
-        // 이제 ingredientNames와 ingredientCounts를 Photon을 통해 전송하거나 처리합니다.
+        // 템을 떨어트렸다는걸 모든플레이어에게 RPC를 쏜다.
         pv.RPC("RpcDropIngredient", RpcTarget.All, ingredientName, ingredientCount, dropPosition);
     }
 
@@ -88,7 +94,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         string ingredientName = ingredient.itemData.itemName;
         int ingredientCount = ingredient.quantity;
 
-        // 이제 ingredientNames와 ingredientCounts를 Photon을 통해 전송하거나 처리합니다.
+        // 템을 떨어트렸다는걸 모든플레이어에게 RPC를 쏜다.
         pv.RPC("RpcDropIngredient", RpcTarget.All, ingredientName, ingredientCount, dropPosition);
     }
 
@@ -102,23 +108,33 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Instance.inventoryPools[itemName].Enqueue(inventoryItem);
     }
 
+    // 아이템을 떨어트리는 RPC함수
     [PunRPC]
     public void RpcDropIngredient(string ingredientName,int ingredientCount, Vector3 dropPosition)
     {
 
+        // pool에 키가 존재하지 않거나 비어있다면
         if (!inventoryPools.ContainsKey(ingredientName) || inventoryPools[ingredientName].Count == 0)
         {
+            // 이 방의 주인이 아닐경우에는 함수 종료
             if (!pv.IsMine) return;
 
             Debug.Log($"{ingredientName}가 부족합니다.");
 
+            // 오브젝트의 프리펩의 경로를 설정하고
             string ingredientPrefabPath = "Ingredient/" + ingredientName;
+            // 오브젝트를 생성한다.
             GameObject ingredientObj = PhotonNetwork.InstantiateRoomObject(ingredientPrefabPath, new Vector3(0,100,0), Quaternion.identity);
+            // 오브젝트의 ViewId를 받아서
             int viewId = ingredientObj.GetComponent<PhotonView>().ViewID;
+            // Queue에 넣어준다.
             pv.RPC("InventoryPoolsEnque",RpcTarget.All, viewId, ingredientName);
         }
+        // 템이 떨어질 지점을 구하고
         Vector3 temp = new Vector3(0, -1, 1);
+        // queue에서 하나 뺸다음에
         GameObject ingredient = inventoryPools[ingredientName].Dequeue();
+        // 값 설정을 해준다.
         ingredient.SetActive(true);
         ingredient.transform.SetParent(null);
         ingredient.transform.position = dropPosition - temp;

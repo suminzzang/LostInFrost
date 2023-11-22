@@ -40,10 +40,13 @@ public class PlayerAudio : MonoBehaviourPunCallbacks
         }
     }
 
+    // RPC를 호출하는 함수
     public void PlaySound(AudioClip clip)
     {
+        // 캐릭터가 내 캐릭터이고 clip이 존재한다면
         if (pv.IsMine && clip != null)
         {
+            // 나를 포함해서 모든 캐릭에게 RPC를 쏜다.
             pv.RPC("PlaySoundRPC", RpcTarget.All, pv.ViewID, clip.name);
         }
     }
@@ -51,23 +54,32 @@ public class PlayerAudio : MonoBehaviourPunCallbacks
     [PunRPC]
     void PlaySoundRPC(int viewID, string clipName)
     {
+        // 소리를 재생할 지점을 카메라 위치로 받는다.
         Vector3 localPlayerPosition = Camera.main.transform.position;
+        // 카메라 위치를 조정해주고
         localPlayerPosition.y = this.transform.parent.position.y;
         localPlayerPosition.z += 8f;
         //GameObject player = PhotonView.Find(viewID).gameObject;
+
+        // 소리가 나는 위치와 메인 카메라 위치와의 거리를 게산해서
         float distance = Vector3.Distance(localPlayerPosition, this.transform.parent.position);
 
+        // someMaxDistance 거리 이하이면
         if (distance < someMaxDistance) // 'someMaxDistance'는 최대 들리는 거리를 나타냄
         {
+            // 볼륨을 조정한후
             float volume = CalculateVolumeBasedOnDistance(distance);
+            // 클립을 불러와서
             AudioClip clip = GetAudioClipByName(clipName+"Sound");
             if (clip != null)
             {
+                // 재생한다.
                 audioSource.PlayOneShot(clip, volume);
             }
         }
     }
 
+    // string으로 AudioClip을 반환하는 함수
     private AudioClip GetAudioClipByName(string clipName)
     {
         //PlaySoundByName
@@ -113,12 +125,14 @@ public class PlayerAudio : MonoBehaviourPunCallbacks
         }
     }
 
+    // 거리에 따라서 볼륨을 조절하는 함수
     private float CalculateVolumeBasedOnDistance(float distance)
     {
         // 예: 거리에 따라 0에서 1 사이의 볼륨을 반환
         return Mathf.Clamp(1 - distance / someMaxDistance, 0, 1);
     }
 
+    // 이 아래 함수들은 위 함수들을 쓰기전에 이전에 쓰던 함수들
     public void PlayPickupSound()
     {
         pv.RPC("PlayPickupSoundRPC", RpcTarget.All);

@@ -26,6 +26,7 @@ public class PlayerBuild : MonoBehaviour
 
     void Update()
     {
+        // 유저가 현재 조종하는 캐릭터가 아니라면 종료
         if (!pv.IsMine) return;
         // 유저가 현재 건설 대기 모드라면
         if(UserStatusManager.Instance.IsBuild)
@@ -134,77 +135,17 @@ public class PlayerBuild : MonoBehaviour
         StartCoroutine(RestoreOriginalMaterialAfterDelay(buildingData.buildingTime));
     }
 
-    // 예비건물을 짓는 메서드
-    //private void BuildAtPosition(Vector3 position)
-    //{
-    //    // 실제 건물을 불러와서
-    //    GameObject buildingPrefab = Resources.Load<GameObject>("Building/" + buildingData.buildingName);
-    //    // 건물 프리펩이 있다면
-    //    if (buildingPrefab)
-    //    {
-    //        // 생성하고
-    //        GameObject builtBuilding = Instantiate(buildingPrefab, position, Quaternion.Euler(0, buildingData.rotation, 0));
-
-    //        // BuildingStatus 컴포넌트에 접근
-    //        BuildingStatus buildingStatus = builtBuilding.GetComponent<BuildingStatus>();
-    //        // 건설대기모드 취소
-    //        UserStatusManager.Instance.IsBuild = false;
-    //        // 건설모드 실행
-    //        UserStatusManager.Instance.IsBuilding = true;
-    //        // 그 프리펩의 Renderer를 불러온다
-    //        //Renderer buildingRenderer = builtBuilding.GetComponent<Renderer>();
-    //        Renderer buildingMaterials = builtBuilding.GetComponent<Renderer>();
-    //        // buildingMaterials 있다면
-    //        if (buildingMaterials)
-    //        {
-    //            Material[] materials = buildingMaterials.materials;
-    //            originalMaterials = new Material[materials.Length];
-    //            // 모든 재질을 회색으로 변경합니다.
-    //            for (int i = 0; i < materials.Length; i++)
-    //            {
-    //                originalMaterials[i] = materials[i];
-    //                materials[i] = grayMaterial;
-    //            }
-    //            // 변경된 재질 배열을 다시 Renderer에 할당합니다.
-    //            buildingMaterials.materials = materials;
-    //            // 원래 색깔로 돌려준다
-    //            anim.SetBool("Building", true);
-    //            StartCoroutine(RestoreOriginalMaterialAfterDelay(builtBuilding, buildingMaterials, buildingData.buildingTime));    
-    //        }
-
-    //    }
-    //}
-
-    //원래의 material로 바꾸는 코루틴
+    // 건축 시간을 주는 코루틴
     private IEnumerator RestoreOriginalMaterialAfterDelay(float delay)
     {
         // 지정된 지연 시간 동안 기다린다
         yield return new WaitForSeconds(delay);
 
-        // 원래의 머티리얼로 복구한다
-        //renderer.materials = originalMaterials;
         anim.SetBool("Building", false);
         // 건설모드 취소
         UserStatusManager.Instance.IsBuilding = false;
-        //building.GetComponent<BuildingStatus>().isInteractive = true;
+        
     }
-
-
-    //원래의 material로 바꾸는 코루틴
-    //private IEnumerator RestoreOriginalMaterialAfterDelay(GameObject building, Renderer renderer, float delay)
-    //{
-    //    // 지정된 지연 시간 동안 기다린다
-    //    yield return new WaitForSeconds(delay);
-
-    //    // 원래의 머티리얼로 복구한다
-    //    renderer.materials = originalMaterials;
-    //    anim.SetBool("Building", false);
-    //    // 건설모드 취소
-    //    UserStatusManager.Instance.IsBuilding = false;
-    //    building.GetComponent<BuildingStatus>().isInteractive = true;
-    //}
-
-    // 건설을 시작하기 전에 짧은 지연을 추가합니다.
     private IEnumerator DelayBuildStart()
     {
         yield return new WaitForSeconds(buildStartDelay);

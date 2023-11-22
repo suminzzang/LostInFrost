@@ -8,7 +8,7 @@ public class Arrow : MonoBehaviour
     private Rigidbody rb;
     private bool hasHit;
     public PlayerAudio arrowAudio;
-    public int arrowDamage = 15;
+    public int arrowDamage = 30;
     private PhotonView pv;
     public bool isShoot;
 

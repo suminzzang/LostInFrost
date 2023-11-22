@@ -21,7 +21,7 @@ public class PlayerStatus : MonoBehaviour
     {
         if (!pv.IsMine) return;
         MySetHp();
-        if (hp<=UserStatusManager.Instance.MinHP)
+        if (hp<=(int) UserStatusManager.Instance.MinHP)
         {
             UserStatusManager.Instance.IsDead = true;
         }

@@ -10,7 +10,16 @@ public class SetCardList : MonoBehaviour
     private int nowAvailableCards;
     private int preAvailableCards;
     Popup popup;
-    private List<GameObject> cardPrefabs;
+    [SerializeField]
+    List<GameObject> cardPrefabs;
+    [SerializeField]
+    private GameObject[] normalCardPrefabs;
+    [SerializeField]
+    private GameObject[] epicCardPrefabs;
+    [SerializeField]
+    private GameObject[] uniqueCardPrefabs;
+    [SerializeField]
+    private GameObject[] legendCardPrefabs;
 
     private void Awake()
     {
@@ -42,10 +51,10 @@ public class SetCardList : MonoBehaviour
     private void LoadCards()
     {
         // CardList 폴더에서 모든 프리팹을 불러오기
-        GameObject[] normalCardPrefabs = Resources.LoadAll<GameObject>("CardListNormal"); // 75%
-        GameObject[] epicCardPrefabs = Resources.LoadAll<GameObject>("CardListEpic");     // 20%
-        GameObject[] uniqueCardPrefabs = Resources.LoadAll<GameObject>("CardListUnique"); // 4%
-        GameObject[] legendCardPrefabs = Resources.LoadAll<GameObject>("CardListLegend"); // 1%
+        normalCardPrefabs = Resources.LoadAll<GameObject>("CardListNormal"); // 75%
+        epicCardPrefabs = Resources.LoadAll<GameObject>("CardListEpic");     // 20%
+        uniqueCardPrefabs = Resources.LoadAll<GameObject>("CardListUnique"); // 4%
+        legendCardPrefabs = Resources.LoadAll<GameObject>("CardListLegend"); // 1%
         cardPrefabs.AddRange(normalCardPrefabs);
         cardPrefabs.AddRange(epicCardPrefabs);
         cardPrefabs.AddRange(uniqueCardPrefabs);

@@ -171,12 +171,18 @@ public class PlayerAttack : MonoBehaviour
 
     private void ShootArrow()
     {
+        // 유저가 공격했다고 표시해주고
         UserStatusManager.Instance.IsAttack = false;
+        // 내구도를 1깎는다.
         UseWeqpon();
-        if (InventoryManager.Instance.UseConsumableItem(arrowItem))
+        // 화살이 있는지 확인하고 사용한 뒤
+        if (InventoryManager.Instance.UseConsumableItem(arrowItem)) // 화살을 사용했다면
         {
+            // 화살 처음 위치를 지정하고
             Vector3 arrowSpawnPosition = transform.parent.position + transform.parent.forward * 1f + Vector3.up;
+            // 화살의 방향을 쏜 사람과 일치해 준다.
             Quaternion arrowRotation = transform.parent.rotation;
+            // 화살을 쐈다고 모든 플레이어에게 RPC를 쏜다.
             pv.RPC("InstantiateArrowRPC", RpcTarget.All, arrowSpawnPosition, arrowRotation);
         }
     }
@@ -184,41 +190,30 @@ public class PlayerAttack : MonoBehaviour
     [PunRPC]
     public void InstantiateArrowRPC(Vector3 position,Quaternion rotation)
     {
+        // Queue에 들어있는 Arrow를 하나 빼주고
         GameObject arrow = NetworkManager.Instance.inventoryPools["Arrow"].Dequeue();
+        // 활성화 시켜주고
         arrow.SetActive(true);
+        // 부모를 해제시켜준다.
         arrow.transform.SetParent(null);
+        // 위치와 회전값을 지정 한 뒤,
         arrow.transform.rotation = rotation;
         arrow.transform.position = position;
+        // 속성값들을 넣어준다.
         arrow.GetComponent<ItemStatus>().itemQuantity = 1;
         arrow.GetComponent<ConsumableStatus>().consumableQuantity = 1;
         arrow.GetComponent<ConsumableStatus>().rotationSpeed = 0;
         arrow.GetComponent<Arrow>().arrowAudio = playerAudio;
         arrow.GetComponent<ItemStatus>().destroyTime = 15f;
         arrow.GetComponent<Arrow>().isShoot = true;
+        // 화살은 날라가야 하므로 RigidBody와 관련된 설정을 해주고
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
+        // 캐릭터가 바라보는 방향으로 500의 힘으로 날려준다.
         rb.AddForce(transform.parent.forward * 500f);
+        // 화살을 날리자마자 주울 수 있으면 안되므로 Layer를 딜레이 시간을 주고 바꿔준다.
         StartCoroutine(DelayBuildStart(arrow.gameObject));
-    }
-
-
-    [PunRPC]
-    public void InitializeArrowRPC(int viewID)
-    {
-        PhotonView targetView = PhotonView.Find(viewID);
-        if (targetView != null)
-        {
-            targetView.GetComponent<ItemStatus>().itemQuantity = 1;
-            targetView.GetComponent<ConsumableStatus>().consumableQuantity = 1;
-            targetView.GetComponent<ConsumableStatus>().rotationSpeed = 0;
-            targetView.GetComponent<Arrow>().arrowAudio = playerAudio;
-            targetView.GetComponent<ItemStatus>().destroyTime = 5f;
-            targetView.GetComponent<Arrow>().isShoot = true;
-            Rigidbody rb = targetView.GetComponent<Rigidbody>();
-            rb.AddForce(transform.parent.forward * 500f);
-            StartCoroutine(DelayBuildStart(targetView.gameObject));
-        }
     }
 
     private void Attack()

@@ -16,6 +16,10 @@ public class InGameManager : MonoBehaviour
     public float escapteTime = 180.0f;
     public float distanceThreshold = 10.0f;
 
+    public IngredientData meat;
+    public ToolData gun;
+    public ConsumableData bullet;
+
     public GameObject helicopter;
 
     private bool onHelicopter = false;

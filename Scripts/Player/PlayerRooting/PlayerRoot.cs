@@ -105,29 +105,35 @@ public class PlayerRoot : MonoBehaviour
                 // 인벤토리가 꽉찬 경우를 대비
                 int remainingQuantity = 0;
 
-                if (itemStatus != null)
+                if (itemStatus != null) // 아이템 정보가 존재한다면
                 {
+                    // 아이템 정보를 불러와서
                     ItemData itemData = itemStatus.itemData;
-                    if (itemData != null)
+                    if (itemData != null) // 아이템 정보가 존재한다면
                     {
-                        if (itemData.itemType == ItemType.Tool)
+                        if (itemData.itemType == ItemType.Tool) // 아이템이 도구라면
                         {
+                            // 땅에 떨어진 도구의 ToolStatus 컴퍼넌트를 가져와서
                             ToolStatus toolStatus = nearest.GetComponent<ToolStatus>();
+                            // 인벤토리에 더하고 남은 개수를 받는다.
                             remainingQuantity = InventoryManager.Instance.AddItem(itemData, itemStatus.itemQuantity, toolStatus.toolDurability);
-                            if (remainingQuantity > 0)
+                            if (remainingQuantity > 0) // 남은 개수가 존재한다면 인벤토리에 추가하지 못한 것이므로
                             {
-                                Debug.Log(remainingQuantity);
+                                // 인벤토리아이템을 새로 생성해서
                                 InventoryItem temp = new InventoryItem(itemData, remainingQuantity, toolStatus.toolDurability);
+                                // 다시 땅에 뿌려준다.
                                 NetworkManager.Instance.DropTool(temp, transform.position);
                             }
                         }
-                        else
+                        else // 아이템이 도구를 제외한 나머지 종류라면
                         {
+                            // 인벤토리에 더해주고 남은 개수를 받는다.
                             remainingQuantity = InventoryManager.Instance.AddItem(itemData, itemStatus.itemQuantity);
-                            if (remainingQuantity > 0)
+                            if (remainingQuantity > 0) // 남은 개수가 0개 이상이라면 인벤토리에 꽉찬 것이므로
                             {
-                                Debug.Log(remainingQuantity);
+                                // 객체를 새로 생성해서
                                 InventoryItem temp = new InventoryItem(itemData, remainingQuantity);
+                                // 다시 땅에 뿌린다.
                                 NetworkManager.Instance.DropIngredient(temp, transform.position);
                             }
                         }

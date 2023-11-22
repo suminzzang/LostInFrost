@@ -9,9 +9,19 @@ using Random = UnityEngine.Random;
 public class CardEffects : MonoBehaviour
 {
     private GameObject player;
+    private IngredientData meat;
+    private ToolData gun;
+    private ConsumableData bullet;
     private void Awake()
     {
         player = GameObject.Find("ECM_EthanPlatformer");
+    }
+
+    private void Start()
+    {
+        meat = InGameManager.Instance.meat;
+        gun = InGameManager.Instance.gun;
+        bullet = InGameManager.Instance.bullet;
     }
 
     public void ColdControll01()
@@ -154,25 +164,15 @@ public class CardEffects : MonoBehaviour
     
     public void GetGun()
     {
-        // 총을 획득합니다.
+        InventoryManager.Instance.AddItem(gun, 1 , gun.toolDurability);
+        InGameManager.Instance.AvailableCards -= 1;
     }
     
     public void GetBullet()
     {
-        // 총알을 획득합니다.
+        InventoryManager.Instance.AddItem(bullet, 10);
+        InGameManager.Instance.AvailableCards -= 1;
     }
-    
-    // public void GetIron()
-    // {
-    //     // 총알을 획득합니다.
-    // }
-    //
-    // public void GetBrimstone()
-    // {
-    //     // 총알을 획득합니다.
-    // }
-    
-    //20
     
     public void HawkEye()
     {
@@ -205,41 +205,19 @@ public class CardEffects : MonoBehaviour
     
     public void GetMeat01()
     {
-        // 고기 획득
-        // GameObject meat = Resources.Load<GameObject>("Ingredient/Meat");
-        // Instantiate(meat, player.transform);
+        InventoryManager.Instance.AddItem(meat, 2);
+        InGameManager.Instance.AvailableCards -= 1;
     }
     
     public void GetMeat02()
     {
+        InventoryManager.Instance.AddItem(meat, 4);
+        InGameManager.Instance.AvailableCards -= 1;
     }
     
     public void GetMeat03()
     {
+        InventoryManager.Instance.AddItem(meat, 10);
+        InGameManager.Instance.AvailableCards -= 1;
     }
-    
-    // public void GetStone()
-    // {
-    //     // 돌을 획득합니다.
-    // }
-    //
-    // public void GetWood()
-    // {
-    //     // 나무를 획득합니다.
-    // }
-    //
-    // public void GetFur()
-    // {
-    //     // 가죽을 획득합니다.
-    // }
-    //
-    // public void GetBone()
-    // {
-    //     // 뼈를 획득합니다.
-    // }
-    //
-    // public void GetBonFire()
-    // {
-    //     // 모닥불 세트를 획득합니다.
-    // }
 }

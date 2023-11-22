@@ -21,7 +21,7 @@ public class GameFinshUi : MonoBehaviour
     private void Update()
     {
         // 유저가 죽었을때
-        if (!isFail && UserStatusManager.Instance.IsDead)
+        if (!isFail && (int) UserStatusManager.Instance.HP <=0)
         {
             FailFinish();
         }

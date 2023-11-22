@@ -13,9 +13,7 @@ public class IngredientDrop : MonoBehaviour
         // 리스트로 for문을 돌린다.
         foreach (var ingredientAmount in interactIngredients)
         {
-            // 각 재료의 프리팹을 가쟈와서
-            //GameObject ingredientPrefab = Resources.Load<GameObject>("Ingredient/" + ingredientAmount.ingredient.itemName);
-
+            // 각 재료의 프리팹을 가져와서
             string ingredientPrefabPath = "Ingredient/" + ingredientAmount.ingredient.itemName;
             // 재료 오브젝트 생성
             GameObject ingredientObj = PhotonNetwork.InstantiateRoomObject(ingredientPrefabPath, transform.position - temp, Quaternion.identity);

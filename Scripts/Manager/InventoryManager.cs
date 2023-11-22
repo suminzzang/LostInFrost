@@ -70,21 +70,18 @@ public class InventoryManager : MonoBehaviour
         {
             AddItem(toolDataList[a], 1, 100);
         }
-        //for (int a = 0; a < ingredientDataList.Count; a++)
-        //{
-        //    AddItem(ingredientDataList[a], 30);
-        //}
     }
 
     // 인벤토리에 아이템 추가
     public int AddItem(ItemData newItem, int qty = 1, int toolDurability = 1)
     {
-        if (newItem.itemType!=ItemType.Ingredient && newItem.itemType!=ItemType.Consumable) // canCount가 false인 경우 바로 새 슬롯을 추가
+        if (newItem.itemType!=ItemType.Ingredient && newItem.itemType!=ItemType.Consumable) // 아이템 타입이 셀 수 없는 종류인 경우
         {
-            if (newItem is ToolData toolData)
+            if (newItem is ToolData toolData) // 아이템이 도구라면
             {
-                return AddNewItemSlot(toolData, 1, toolDurability) ? 0:1;
+                return AddNewItemSlot(toolData, 1, toolDurability) ? 0:1; // 슬롯을 하나 더해서 내구도와 함께 아이템을 넣어준다.
             }
+            // 도구가 아니라면 슬롯을 추가해서 그냥 더해준다
             return AddNewItemSlot(newItem, 1) ? 0 : 1;
         }
 
@@ -117,6 +114,7 @@ public class InventoryManager : MonoBehaviour
         return qty; // 남은 수량 반환
     }
 
+    // 아이템 데이터를 받아서 인벤토리에 몇개 있는지 반환하는 함수
     public int NumberItem(ItemData item)
     {
         int totalQuantityInInventory = inventory
@@ -125,7 +123,7 @@ public class InventoryManager : MonoBehaviour
 
         return totalQuantityInInventory;
     }
-
+    // 아이템 리스트를 받아서 아이템이 인벤토리에 다 있는지 true,false를 반환하는 함수
     public bool CheckItem(List<InventoryItem> itemList)
     {
         foreach (var itemToCheck in itemList)
@@ -146,6 +144,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
+    // 인벤토리에 있는 아이템을 사용하는 함수
     public bool UseItem(List<InventoryItem> itemList)
     {
         if (!UserStatusManager.Instance.CanMake)
